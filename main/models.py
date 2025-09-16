@@ -25,3 +25,4 @@ class Product(models.Model):
     def increment_sales(self):
         self.sold_count += 1
         self.save()
+        
