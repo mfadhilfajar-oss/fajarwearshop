@@ -1,6 +1,5 @@
 from django.forms import ModelForm
 from main.models import Product
-from main.models import Car
 
 class ProductsForm(ModelForm):
     class Meta:
