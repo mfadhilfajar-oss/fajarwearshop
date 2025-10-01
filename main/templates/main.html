@@ -7,45 +7,49 @@
 
 {% block content %}
 {% include 'navbar.html' %}
-<div class="bg-gray-50 w-full pt-16 min-h-screen">
+<div class="bg-gradient-to-br from-cyan-50 to-emerald-50 w-full pt-16 min-h-screen">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
     <!-- Header Section -->
-    <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-2">Latest FajarWearShop</h1>
-      <p class="text-gray-600">Stay updated with the latest product in FajarWearShop</p>
+    <div class="mb-8 text-center sm:text-left">
+      <h1 class="text-3xl font-extrabold text-cyan-900 mb-2 tracking-tight">Latest FajarWearShop</h1>
+      <p class="text-emerald-700">Stay updated with the latest products in FajarWearShop</p>
     </div>
 
     <!-- Filter Section -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 bg-white rounded-lg border border-gray-200 p-4">
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 bg-white rounded-xl border border-cyan-100 shadow-sm p-4">
       <div class="flex space-x-3 mb-4 sm:mb-0">
-        <a href="?" class="{% if request.GET.filter == 'all' or not request.GET.filter  %} bg-green-600 text-white{% else %}bg-white text-gray-700 border border-gray-300{% endif %} px-4 py-2 rounded-md font-medium transition-colors hover:bg-green-600 hover:text-white">
+        <a href="?" 
+           class="{% if request.GET.filter == 'all' or not request.GET.filter  %} bg-cyan-600 text-white {% else %} bg-white text-gray-700 border border-gray-300 {% endif %} px-4 py-2 rounded-full font-semibold transition-colors hover:bg-cyan-700 hover:text-white">
           All Products
         </a>
-        <a href="?filter=my" class="{% if request.GET.filter == 'my' %} bg-green-600 text-white{% else %}bg-white text-gray-700 border border-gray-300{% endif %} px-4 py-2 rounded-md font-medium transition-colors hover:bg-green-600 hover:text-white">
+        <a href="?filter=my" 
+           class="{% if request.GET.filter == 'my' %} bg-cyan-600 text-white {% else %} bg-white text-gray-700 border border-gray-300 {% endif %} px-4 py-2 rounded-full font-semibold transition-colors hover:bg-cyan-700 hover:text-white">
           My Products
         </a>
       </div>
       {% if user.is_authenticated %}
-        <div class="text-sm text-gray-500">
-          Last login: {{ last_login }}
+        <div class="text-sm text-gray-600">
+          Last login: <span class="font-medium text-emerald-700">{{ last_login }}</span>
         </div>
       {% endif %}
     </div>
 
-
+    <!-- Empty State -->
     {% if not products_list %}
-      <div class="bg-white rounded-lg border border-gray-200 p-12 text-center">
+      <div class="bg-white rounded-xl border border-cyan-100 shadow p-12 text-center">
         <div class="w-32 h-32 mx-auto mb-4">
           <img src="{% static 'image/no-products.png' %}" alt="No products available" class="w-full h-full object-contain">
         </div>
-        <h3 class="text-lg font-medium text-gray-900 mb-2">No products found</h3>
-        <p class="text-gray-500 mb-6">Be the first to share FajarWearShop with the community.</p>
-        <a href="{% url 'main:create_news' %}" class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors">
+        <h3 class="text-lg font-bold text-cyan-900 mb-2">No products found</h3>
+        <p class="text-gray-600 mb-6">Be the first to share FajarWearShop with the community.</p>
+        <a href="{% url 'main:create_news' %}" 
+           class="inline-flex items-center px-5 py-2.5 bg-emerald-600 text-white rounded-full hover:bg-emerald-700 transition-colors font-semibold shadow">
           Create Products
         </a>
       </div>
     {% else %}
+      <!-- Product Grid -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for products in products_list %}
           {% include 'card_products.html' with products=products %}

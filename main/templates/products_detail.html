@@ -6,38 +6,39 @@
 {% endblock meta %}
 
 {% block content %}
-<div class="bg-gray-50 w-full min-h-screen">
+<div class="bg-gradient-to-br from-cyan-50 to-emerald-50 w-full min-h-screen">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
         <!-- Back Navigation -->
         <div class="mb-6">
-            <a href="{% url 'main:show_main' %}" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">
+            <a href="{% url 'main:show_main' %}" 
+               class="inline-flex items-center text-cyan-700 hover:text-emerald-700 font-semibold transition-colors">
                 ← Back to etalase
             </a>
         </div>
         
         <!-- Article -->
-        <article class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <article class="bg-white rounded-2xl shadow-lg border border-cyan-100 overflow-hidden">
             
             <!-- Header -->
             <div class="p-6 sm:p-8">
                 <div class="flex flex-wrap items-center gap-2 mb-4">
-                    <span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-green-600 text-white">
+                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-cyan-600 text-white shadow-sm">
                         {{ products.get_category_display }}
                     </span>
                     {% if products.is_bestseller %}
-                        <span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-yellow-100 text-yellow-800">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">
                             Featured
                         </span>
                     {% endif %}
                     {% if products.is_bestseller %}
-                        <span class="inline-flex items-center px-3 py-1 rounded-md text-xs font-medium bg-red-100 text-red-800">
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-amber-100 text-amber-700">
                             BestSeller
                         </span>
                     {% endif %}
                 </div>
                 
-                <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 leading-tight mb-4">
+                <h1 class="text-3xl sm:text-4xl font-extrabold text-cyan-900 tracking-tight leading-tight mb-4">
                     {{ products.title }}
                 </h1>
                 
@@ -45,7 +46,7 @@
                     <time datetime="{{ products.created_at|date:'c' }}">
                         {{ products.created_at|date:"M j, Y g:i A" }}
                     </time>
-                    <span>{{ products.sold_count }} solds</span>
+                    <span class="text-emerald-600 font-medium">{{ products.sold_count }} solds</span>
                 </div>
             </div>
 
@@ -54,7 +55,7 @@
                 <div class="px-6 sm:px-8">
                     <img src="{{ products.thumbnail }}" 
                          alt="{{ products.title }}" 
-                         class="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-lg">
+                         class="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-xl shadow-md">
                 </div>
             {% endif %}
 
@@ -68,10 +69,10 @@
             </div>
 
             <!-- Author Info -->
-            <div class="border-t border-gray-200 p-6 sm:p-8 bg-gray-50">
+            <div class="border-t border-cyan-100 p-6 sm:p-8 bg-gradient-to-r from-cyan-50 to-emerald-50">
                 <div class="flex items-center justify-between">
                     <div>
-                        <div class="font-medium text-gray-900">
+                        <div class="font-semibold text-cyan-800">
                             {% if products.user %}
                                 <p>{{ products.user.username }}</p>
                             {% else %}
