@@ -86,4 +86,21 @@ Tugas 5:
  5. Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step (bukan hanya sekadar mengikuti tutorial)!
  = cara saya mengimplementasikan checklist yaitu dengan cara memahami tutorialnya dan maksud tiap step itu apa, pada tugas 5 kali ini, saya mengubah FajarWearShop dengan penambahan design pada halaman login, halaman main serta halam detail produk, yang dimana disini menggunakan html dan css sebagai designnya, dengan menambahkan file baru, yang sebelumnya tampilan website FajarWearShop putih polos, jadi ada warnnanya dan lebih menarik. dan juga diatur oleh grid layout, margin, border, dan padding. Dan pada akhirnya saya berhasil untuk mengubah tampilan web saya yaitu FajarWearShop menjadi lebih menarik dan enak dipandang, dan juga, adanya responsive design, yang dimana disini saya paham bahwasanya jika websitenya dibuka menggunakan laptop, dia akan mneyesuaikan halamannya, serta jika dibuka dengan hp, dia akan menyesuaikannya juga, ini menjadi konsep penting di aplikasi web, darisini saya paham bahwa itu sangat perlu untuk memudahkan user dalam melihat website kita, dan pada akhirnya tugas 5 saya kali ini selesai.
 
+ ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Tugas 6: 
+1. Apa perbedaan antara synchronous request dan asynchronous request?
+= Synchronous request mengharuskan browser menunggu respon dari server sebelum bisa melanjutkan aktivitas lain, sehingga setiap aksi user memicu reload halaman penuh. Sedangkan asynchronous request, seperti yang dilakukan menggunakan AJAX, memungkinkan browser mengirim request ke server di background dan hanya memperbarui bagian tertentu dari halaman tanpa reload, membuat interaksi terasa lebih cepat dan responsif.
+
+2. Bagaimana AJAX bekerja di Django (alur request–response)?
+= AJAX bekerja di Django dengan JavaScript mengirim request (misal pakai fetch() atau $.ajax()) ke endpoint view tertentu. View ini memproses request dan mengembalikan respon dalam format JSON menggunakan JsonResponse(). Setelah itu, JavaScript menerima data JSON tersebut dan memperbarui tampilan halaman secara dinamis sesuai kebutuhan, tanpa reload seluruh halaman.
+
+3. Apa keuntungan menggunakan AJAX dibandingkan render biasa di Django?
+= Keuntungan utama AJAX adalah halaman tidak perlu reload penuh sehingga lebih cepat, interaktif, dan hemat bandwidth. AJAX juga memungkinkan update data secara real-time, membuat website terasa lebih modern dan smooth, serta meningkatkan responsivitas dan kenyamanan pengguna.
+
+4. Bagaimana cara memastikan keamanan saat menggunakan AJAX untuk fitur Login dan Register di Django?
+= Keamanan AJAX untuk fitur sensitif seperti Login dan Register dapat dijaga dengan menyertakan CSRF token di setiap request POST, melakukan validasi input di server-side, menggunakan HTTPS, menghindari pengiriman data sensitif di URL, serta membatasi rate request untuk mencegah serangan brute force.
+
+5. Bagaimana AJAX mempengaruhi pengalaman pengguna (User Experience) pada website?
+= AJAX meningkatkan pengalaman pengguna karena interaksi menjadi lebih cepat, halaman lebih responsif, dan pengguna dapat mengakses informasi atau melakukan aksi tanpa menunggu reload halaman. Hal ini membuat website terasa lebih nyaman, modern, dan interaktif dibandingkan dengan render halaman biasa.
+
  

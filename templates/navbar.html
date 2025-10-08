@@ -1,97 +1,107 @@
-<nav class="fixed top-0 left-0 w-full bg-white border-b border-gray-200 shadow-sm z-50">
+{% load static %}
+<nav class="fixed top-0 left-0 w-full z-50">
+  <!-- gradient bar with blur -->
+  <div class="bg-gradient-to-r from-emerald-500 to-cyan-600/95 backdrop-blur-xl border-b border-white/20">
     <div class="max-w-7xl mx-auto px-6 lg:px-8">
-      <div class="flex items-center justify-between h-16">
-        <div class="flex items-center">
-          <h1 class="text-xl font-semibold text-gray-900">
-            <span class="text-green-600">FajarWearShop</span> 
-          </h1>
-        </div>
-        
+      <div class="flex items-center justify-between h-16 text-white">
+        <!-- Logo -->
+        <div class="flex items-center gap-2">
+        <span class="inline-block w-2 h-2 rounded-full bg-emerald-300"></span>
+        <h1 class="text-xl font-extrabold tracking-tight text-white">
+        <span class="text-emerald-200">Fajar</span><span class="text-cyan-100">WearShop</span>
+        <span class="block h-0.5 w-16 mt-1 bg-gradient-to-r from-emerald-300 to-cyan-300 rounded-full"></span>
+        </h1>
+      </div>
+
         <!-- Desktop Navigation -->
         <div class="hidden md:flex items-center space-x-8">
-          <a href="/" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">
+          <a href="/" class="font-semibold px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition-colors">
             Home
           </a>
-          <a href="{% url 'main:create_products' %}" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">
+          <a href="{% url 'main:create_products' %}" class="font-semibold px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition-colors">
             Create Products
           </a>
         </div>
-        
+
         <!-- Desktop User Section -->
         <div class="hidden md:flex items-center space-x-6">
           {% if user.is_authenticated %}
-            <div class="text-right">
-              <div class="text-sm font-medium text-gray-900">{{ name|default:user.username }}</div>
-              <div class="text-xs text-gray-500">{{ npm|default:"2406430104" }} - {{ class|default:"Class" }}</div>
+            <div class="text-right leading-tight">
+              <div class="text-sm font-semibold text-white drop-shadow">{{ name|default:user.username }}</div>
+              <div class="text-[11px] text-white/80">{{ npm|default:"2406430104" }} - {{ class|default:"Class" }}</div>
             </div>
-            <a href="{% url 'main:logout' %}" class="text-red-600 hover:text-red-700 font-medium transition-colors">
+            <a href="{% url 'main:logout' %}"
+               class="font-bold px-3 py-1.5 rounded-lg bg-red-700 text-white hover:bg-red-800
+          focus:outline-none focus:ring-2 focus:ring-red-400/60 transition-colors">
               Logout
             </a>
           {% else %}
-            <a href="{% url 'main:login' %}" class="text-gray-600 hover:text-gray-900 font-medium transition-colors">
+            <a href="{% url 'main:login' %}" 
+               class="font-semibold px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 transition-colors">
               Login
             </a>
-            <a href="{% url 'main:register' %}" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded font-medium transition-colors">
+            <a href="{% url 'main:register' %}" 
+               class="font-semibold px-4 py-2 rounded-lg bg-white text-emerald-700 hover:bg-emerald-50 transition-colors shadow-sm">
               Register
             </a>
           {% endif %}
         </div>
-        
+
         <!-- Mobile Menu Button -->
         <div class="md:hidden flex items-center">
-          <button class="mobile-menu-button p-2 text-gray-600 hover:text-gray-900 transition-colors">
+          <button class="mobile-menu-button p-2 text-white/90 hover:text-white transition-colors">
             <span class="sr-only">Open menu</span>
-            <div class="w-6 h-6 flex flex-col justify-center items-center">
-              <span class="bg-current block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm"></span>
-              <span class="bg-current block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm my-0.5"></span>
-              <span class="bg-current block transition-all duration-300 ease-out h-0.5 w-6 rounded-sm"></span>
+            <div class="w-6 h-6 flex flex-col justify-center items-center space-y-1">
+              <span class="bg-current block h-0.5 w-6 rounded"></span>
+              <span class="bg-current block h-0.5 w-6 rounded"></span>
+              <span class="bg-current block h-0.5 w-6 rounded"></span>
             </div>
           </button>
         </div>
       </div>
     </div>
-    <!-- Mobile Menu -->
-    <div class="mobile-menu hidden md:hidden bg-white border-t border-gray-200">
-      <div class="px-6 py-4 space-y-4">
-        <!-- Mobile Navigation Links -->
-        <div class="space-y-1">
-          <a href="/" class="block text-gray-600 hover:text-gray-900 font-medium py-3 transition-colors">
-            Home
+  </div>
+
+  <!-- Mobile Menu -->
+  <div class="mobile-menu hidden md:hidden bg-white/90 backdrop-blur-xl border-b border-emerald-100 shadow-sm">
+    <div class="px-6 py-4 space-y-4">
+      <div class="space-y-2">
+        <a href="/" class="block text-emerald-800 hover:text-emerald-600 font-medium py-2 transition-colors">
+          Home
+        </a>
+        <a href="{% url 'main:create_products' %}" class="block text-emerald-800 hover:text-emerald-600 font-medium py-2 transition-colors">
+          Create Products
+        </a>
+      </div>
+
+      <div class="border-t border-emerald-100 pt-4">
+        {% if user.is_authenticated %}
+          <div class="mb-4">
+            <div class="font-semibold text-emerald-900">{{ name|default:user.username }}</div>
+            <div class="text-sm text-emerald-700/80">{{ npm|default:"2406430104" }} - {{ class|default:"Class" }}</div>
+          </div>
+          <a href="{% url 'main:logout' %}" 
+               class="block text-center font-bold px-4 py-2 rounded-md bg-red-700 text-white
+          hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-red-400/60 transition-colors">
+            Logout
           </a>
-          <a href="{% url 'main:create_products' %}" class="block text-gray-600 hover:text-gray-900 font-medium py-3 transition-colors">
-            Create Products
+        {% else %}
+          <a href="{% url 'main:login' %}" 
+             class="block text-emerald-800 hover:text-emerald-600 font-medium py-2 transition-colors">
+            Login
           </a>
-        </div>
-        
-        <!-- Mobile User Section -->
-        <div class="border-t border-gray-200 pt-4">
-          {% if user.is_authenticated %}
-            <div class="mb-4">
-              <div class="font-medium text-gray-900">{{ name|default:user.username }}</div>
-              <div class="text-sm text-gray-500">{{ npm|default:"2406430104" }} - {{ class|default:"Class" }}</div>
-            </div>
-            <a href="{% url 'main:logout' %}" class="block text-red-600 hover:text-red-700 font-medium py-3 transition-colors">
-              Logout
-            </a>
-          {% else %}
-            <div class="space-y-3">
-              <a href="{% url 'main:login' %}" class="block text-gray-600 hover:text-gray-900 font-medium py-3 transition-colors">
-                Login
-              </a>
-              <a href="{% url 'main:register' %}" class="block bg-green-600 hover:bg-green-700 text-white font-medium py-3 px-4 rounded text-center transition-colors">
-                Register
-              </a>
-            </div>
-          {% endif %}
-        </div>
+          <a href="{% url 'main:register' %}" 
+             class="block bg-emerald-600 hover:bg-emerald-700 text-white font-medium py-2 px-4 rounded-md text-center transition-all shadow-sm hover:shadow-md">
+            Register
+          </a>
+        {% endif %}
       </div>
     </div>
-    <script>
-      const btn = document.querySelector("button.mobile-menu-button");
-      const menu = document.querySelector(".mobile-menu");
-    
-      btn.addEventListener("click", () => {
-        menu.classList.toggle("hidden");
-      });
-    </script>
-  </nav>
+  </div>
+
+  <script>
+    const btn = document.querySelector(".mobile-menu-button");
+    const menu = document.querySelector(".mobile-menu");
+    btn?.addEventListener("click", () => menu.classList.toggle("hidden"));
+  </script>
+</nav>

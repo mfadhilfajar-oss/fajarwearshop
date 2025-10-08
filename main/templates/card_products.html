@@ -1,23 +1,25 @@
 {% load static %}
-<article class="bg-white rounded-2xl border border-cyan-100 hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+<article class="bg-white rounded-2xl border border-emerald-100 hover:shadow-xl transition-shadow duration-300 overflow-hidden">
   <!-- Thumbnail -->
   <div class="aspect-[16/9] relative overflow-hidden">
     {% if products.thumbnail %}
-      <img src="{{ products.thumbnail }}" alt="{{ products.title }}" class="w-full h-full object-cover">
+      <img src="{{ products.thumbnail }}" alt="{{ products.name }}" class="w-full h-full object-cover">
     {% else %}
-      <div class="w-full h-full bg-cyan-50 flex items-center justify-center text-cyan-400 text-sm">No Image</div>
+      <div class="w-full h-full bg-emerald-50 flex items-center justify-center text-emerald-400 text-sm">No Image</div>
     {% endif %}
 
     <!-- Category Badge -->
     <div class="absolute top-3 left-3">
-      <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-cyan-600 text-white shadow">
+      <span
+        class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold 
+               text-white shadow bg-gradient-to-r from-emerald-600 to-cyan-600">
         {{ products.get_category_display }}
       </span>
     </div>
 
     <!-- Status Badges -->
     <div class="absolute top-3 right-3 flex space-x-2">
-      {% if products.is_bestseller %}
+      {% if products.is_featured %}
         <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-700">
           Featured
         </span>
@@ -33,16 +35,14 @@
   <!-- Content -->
   <div class="p-5">
     <div class="flex items-center text-sm text-gray-500 mb-3">
-      <time datetime="{{ products.created_at|date:'c' }}">
-        {{ products.created_at|date:"M j, Y" }}
-      </time>
+      <time datetime="{{ products.created_at|date:'c' }}">{{ products.created_at|date:"M j, Y" }}</time>
       <span class="mx-2">•</span>
-      <span class="text-emerald-600 font-medium">{{ products.sold_count }} Solds</span>
+      <span class="text-emerald-600 font-medium">{{ products.sold_count }} Sold</span>
     </div>
 
-    <h3 class="text-lg font-semibold text-cyan-900 mb-3 line-clamp-2 leading-tight">
-      <a href="{% url 'main:show_products' products.id %}" class="hover:text-emerald-700 transition-colors">
-        {{ products.title }}
+    <h3 class="text-lg font-semibold text-emerald-900 mb-3 line-clamp-2 leading-tight">
+      <a href="{% url 'main:show_products' products.id %}" class="hover:text-cyan-700 transition-colors">
+        {{ products.name }}
       </a>
     </h3>
 
@@ -52,9 +52,9 @@
 
     <!-- Action Buttons -->
     {% if user.is_authenticated and products.user == user %}
-      <div class="flex items-center justify-between pt-4 border-t border-cyan-100">
+      <div class="flex items-center justify-between pt-4 border-t border-emerald-100">
         <a href="{% url 'main:show_products' products.id %}" 
-           class="text-cyan-600 hover:text-emerald-700 font-medium text-sm transition-colors">
+           class="text-cyan-700 hover:text-emerald-700 font-medium text-sm transition-colors">
           Buy this product →
         </a>
         <div class="flex space-x-2">
@@ -69,9 +69,9 @@
         </div>
       </div>
     {% else %}
-      <div class="pt-4 border-t border-cyan-100">
+      <div class="pt-4 border-t border-emerald-100">
         <a href="{% url 'main:show_products' products.id %}" 
-           class="text-cyan-600 hover:text-emerald-700 font-medium text-sm transition-colors">
+           class="text-cyan-700 hover:text-emerald-700 font-medium text-sm transition-colors">
           Buy this product →
         </a>
       </div>

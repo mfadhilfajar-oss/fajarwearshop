@@ -7,55 +7,313 @@
 
 {% block content %}
 {% include 'navbar.html' %}
+
+<!-- BG & tone sama seperti products_detail: light cyan → emerald -->
 <div class="bg-gradient-to-br from-cyan-50 to-emerald-50 w-full pt-16 min-h-screen">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
 
-    <!-- Header Section -->
+    <!-- Header -->
     <div class="mb-8 text-center sm:text-left">
-      <h1 class="text-3xl font-extrabold text-cyan-900 mb-2 tracking-tight">Latest FajarWearShop</h1>
-      <p class="text-emerald-700">Stay updated with the latest products in FajarWearShop</p>
+      <h1 class="text-3xl font-extrabold text-cyan-900 mb-2 tracking-tight">
+        Latest FajarWearShop Collection
+      </h1>
+      <p class="text-emerald-700">Stay updated with the newest arrivals and deals!</p>
     </div>
 
-    <!-- Filter Section -->
-    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 bg-white rounded-xl border border-cyan-100 shadow-sm p-4">
+    <!-- Buttons -->
+    <div class="flex flex-wrap items-center gap-3 mb-6">
+      <button onclick="showModal()"
+        class="inline-flex items-center px-5 py-2.5 
+        bg-gradient-to-r from-emerald-500 to-cyan-600 
+        text-white font-semibold rounded-lg shadow-sm 
+        hover:from-emerald-600 hover:to-cyan-700 
+        transition-all duration-200 ease-in-out">
+        ➕ Create Product by AJAX
+      </button>
+
+      <button id="refreshBtn"
+        class="inline-flex items-center px-5 py-2.5 
+        bg-gradient-to-r from-cyan-500 to-emerald-600
+        text-white font-semibold rounded-lg shadow-sm 
+        hover:from-cyan-600 hover:to-emerald-700 
+        transition-all duration-200 ease-in-out">
+        🔄 Refresh Products
+      </button>
+    </div>
+
+    <!-- Filter (kartu putih + border cyan, sama tone dengan detail) -->
+    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 bg-white rounded-2xl border border-cyan-100 shadow-sm p-4">
       <div class="flex space-x-3 mb-4 sm:mb-0">
-        <a href="?" 
-           class="{% if request.GET.filter == 'all' or not request.GET.filter  %} bg-cyan-600 text-white {% else %} bg-white text-gray-700 border border-gray-300 {% endif %} px-4 py-2 rounded-full font-semibold transition-colors hover:bg-cyan-700 hover:text-white">
+        <a id="filter-all" 
+           class="bg-cyan-600 text-white px-4 py-2 rounded-full font-semibold transition-colors hover:bg-cyan-700">
           All Products
         </a>
-        <a href="?filter=my" 
-           class="{% if request.GET.filter == 'my' %} bg-cyan-600 text-white {% else %} bg-white text-gray-700 border border-gray-300 {% endif %} px-4 py-2 rounded-full font-semibold transition-colors hover:bg-cyan-700 hover:text-white">
+        <a id="filter-my" 
+           class="bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-full font-semibold transition-colors hover:bg-cyan-700 hover:text-white">
           My Products
         </a>
       </div>
       {% if user.is_authenticated %}
-        <div class="text-sm text-gray-600">
-          Last login: <span class="font-medium text-emerald-700">{{ last_login }}</span>
-        </div>
+      <div class="text-sm text-gray-600">
+        Last login: <span class="font-medium text-emerald-700">{{ last_login }}</span>
+      </div>
       {% endif %}
     </div>
 
-    <!-- Empty State -->
-    {% if not products_list %}
-      <div class="bg-white rounded-xl border border-cyan-100 shadow p-12 text-center">
-        <div class="w-32 h-32 mx-auto mb-4">
-          <img src="{% static 'image/no-products.png' %}" alt="No products available" class="w-full h-full object-contain">
-        </div>
-        <h3 class="text-lg font-bold text-cyan-900 mb-2">No products found</h3>
-        <p class="text-gray-600 mb-6">Be the first to share FajarWearShop with the community.</p>
-        <a href="{% url 'main:create_news' %}" 
-           class="inline-flex items-center px-5 py-2.5 bg-emerald-600 text-white rounded-full hover:bg-emerald-700 transition-colors font-semibold shadow">
-          Create Products
-        </a>
+    <!-- Loading (kartu putih) -->
+    <div id="loading" class="bg-white rounded-2xl border border-cyan-100 shadow p-12 text-center hidden">
+      <svg class="animate-spin h-8 w-8 text-cyan-600 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z"></path>
+      </svg>
+      <p class="text-gray-600 mt-3">Loading products...</p>
+    </div>
+
+    <!-- Error -->
+    <div id="error" class="hidden text-center text-red-600 font-medium"></div>
+
+    <!-- Grid -->
+    <div id="grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 hidden"></div>
+
+    <!-- Empty (kartu putih) -->
+    <div id="empty" class="bg-white rounded-2xl border border-cyan-100 shadow p-12 text-center hidden">
+      <div class="w-32 h-32 mx-auto mb-4 opacity-90">
+        <img src="{% static 'image/no-products.png' %}" alt="No products available" class="w-full h-full object-contain">
       </div>
-    {% else %}
-      <!-- Product Grid -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {% for products in products_list %}
-          {% include 'card_products.html' with products=products %}
-        {% endfor %}
-      </div>
-    {% endif %}
+      <h3 class="text-lg font-bold text-cyan-900 mb-2">No products found</h3>
+      <p class="text-gray-600 mb-6">Be the first to share your FajarWear collection with the world.</p>
+      <button onclick="showModal()" 
+         class="inline-flex items-center px-5 py-2.5 bg-cyan-600 text-white rounded-full hover:bg-cyan-700 transition-colors font-semibold shadow">
+        ➕ Create Products
+      </button>
+    </div>
   </div>
 </div>
+
+<div id="toast-container" class="fixed top-6 right-6 z-50 space-y-3"></div>
+
+<script>
+// === CONFIG ===
+const PRODUCT_API_ENDPOINT = "{% url 'main:show_json' %}";
+const CURRENT_USER_ID = "{{ user.id|default_if_none:'' }}";
+
+// === DOM ===
+const loadingSpinner = document.getElementById('loading');
+const errorMessage = document.getElementById('error');
+const emptyStateDisplay = document.getElementById('empty');
+const productGridContainer = document.getElementById('grid');
+const showAllProductsButton = document.getElementById('filter-all');
+const showMyProductsButton = document.getElementById('filter-my');
+const refreshBtn = document.getElementById('refreshBtn');
+
+// === STATE ===
+let activeFilter = 'all';
+let allProductsData = [];
+
+// === BUTTON STYLE (match detail tone) ===
+function updateFilterButtonsAppearance() {
+  if (activeFilter === 'all') {
+    showAllProductsButton.className = 'bg-cyan-600 text-white px-4 py-2 rounded-full font-semibold transition-colors hover:bg-cyan-700';
+    showMyProductsButton.className = 'bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-full font-semibold transition-colors hover:bg-cyan-700 hover:text-white';
+  } else {
+    showMyProductsButton.className = 'bg-cyan-600 text-white px-4 py-2 rounded-full font-semibold transition-colors hover:bg-cyan-700';
+    showAllProductsButton.className = 'bg-white text-gray-700 border border-gray-300 px-4 py-2 rounded-full font-semibold transition-colors hover:bg-cyan-700 hover:text-white';
+  }
+}
+
+// === DISPLAY CONTROL ===
+function displayPageSection({ showLoading = false, showError = false, showEmpty = false, showGrid = false }) {
+  loadingSpinner.classList.toggle('hidden', !showLoading);
+  errorMessage.classList.toggle('hidden', !showError);
+  emptyStateDisplay.classList.toggle('hidden', !showEmpty);
+  productGridContainer.classList.toggle('hidden', !showGrid);
+}
+
+// === PRODUCT CARD (kartu putih + border cyan) ===
+function buildProductCardElement(product, index) {
+  const canEdit = CURRENT_USER_ID && Number(CURRENT_USER_ID) === Number(product.user_id);
+  const article = document.createElement('article');
+  article.className =
+    'opacity-0 translate-y-4 transition-all duration-500 ease-out bg-white rounded-2xl border border-cyan-100 shadow hover:shadow-lg overflow-hidden flex flex-col h-full';
+
+  const badge = product.is_featured
+    ? `<span class="px-2 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded">⭐ Featured</span>`
+    : '';
+
+  const thumb = product.thumbnail
+    ? `<img src="${product.thumbnail}" class="w-full h-56 object-cover" alt="${product.name}">`
+    : `<div class="w-full h-56 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center text-gray-400">No Image</div>`;
+
+  article.innerHTML = `
+    <div class="relative">
+      ${thumb}
+      ${badge ? `<div class="absolute top-3 right-3">${badge}</div>` : ''}
+    </div>
+
+    <div class="p-5 flex flex-col flex-1">
+      <h3 class="text-lg font-semibold text-cyan-900 mb-2 line-clamp-2">${product.name}</h3>
+      <p class="text-gray-600 text-sm mb-3 line-clamp-3">${product.description ?? ''}</p>
+
+      <p class="text-cyan-700 font-bold mb-4">Rp ${Number(product.price).toLocaleString('id-ID')}</p>
+
+      <div class="mt-auto flex items-center justify-between pt-3 border-t border-gray-100">
+        <a href="/products/${product.id}/"
+           class="bg-cyan-600 text-white px-4 py-2 rounded-md text-sm font-medium hover:bg-cyan-700 transition-colors">
+           Buy Product
+        </a>
+        ${
+          canEdit
+            ? `<div class="flex gap-2">
+                <button class="text-cyan-600 hover:text-cyan-700 text-sm font-medium edit-btn"
+                  data-id="${product.id}"
+                  data-name="${(product.name ?? '').replace(/"/g,'&quot;')}"
+                  data-price="${product.price}"
+                  data-description="${(product.description ?? '').replace(/"/g,'&quot;')}"
+                  data-category="${product.category ?? ''}"
+                  data-thumbnail="${product.thumbnail ?? ''}"
+                  data-featured="${product.is_featured ? '1' : '0'}">
+                  Edit
+                </button>
+                <button onclick="confirmDelete(${product.id})"
+                  class="text-red-600 hover:text-red-700 text-sm font-medium">
+                  Delete
+                </button>
+              </div>`
+            : ''
+        }
+      </div>
+    </div>
+  `;
+
+  // animasi halus
+  setTimeout(() => {
+    article.classList.remove('opacity-0', 'translate-y-4');
+    article.classList.add('opacity-100', 'translate-y-0');
+  }, 100 * (index ?? 0));
+
+  return article;
+}
+
+// === DELETE CONFIRM ===
+function confirmDelete(productId) {
+  const modal = document.createElement('div');
+  modal.className = 'fixed inset-0 bg-black/40 backdrop-blur-sm z-[90] flex items-center justify-center';
+  modal.innerHTML = `
+    <div class="bg-white rounded-xl shadow-xl w-[90%] sm:w-96 p-6 text-center transform scale-95 transition-all duration-200">
+      <h3 class="text-lg font-semibold text-gray-800 mb-2">Yakin mau hapus?</h3>
+      <p class="text-gray-600 text-sm mb-6">Tindakan ini tidak bisa dibatalkan.</p>
+      <div class="flex justify-center gap-3">
+        <button id="cancelDel" class="px-4 py-2 rounded-lg bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium">Batal</button>
+        <button id="confirmDel" class="px-4 py-2 rounded-lg bg-red-600 hover:bg-red-700 text-white font-medium">Hapus</button>
+      </div>
+    </div>`;
+  document.body.appendChild(modal);
+
+  requestAnimationFrame(() => {
+    const box = modal.querySelector('div');
+    box.classList.remove('scale-95');
+    box.classList.add('scale-100');
+  });
+
+  modal.querySelector('#cancelDel').onclick = () => modal.remove();
+  modal.querySelector('#confirmDel').onclick = async () => {
+    modal.remove();
+    try {
+      // masih pakai GET delete sesuai views sekarang
+      const res = await fetch(`/products/${productId}/delete`, { method: 'GET' });
+      if (res.ok) {
+        if (typeof showToast === 'function') showToast('✅ Product deleted!', 'success');
+        fetchProducts();
+      } else {
+        if (typeof showToast === 'function') showToast('❌ Failed to delete product', 'error');
+      }
+    } catch {
+      if (typeof showToast === 'function') showToast('❌ Error deleting product', 'error');
+    }
+  };
+}
+
+// === RENDER GRID ===
+function renderAllProducts(products) {
+  productGridContainer.innerHTML = '';
+  products.forEach((p, i) => productGridContainer.appendChild(buildProductCardElement(p, i)));
+
+  // wire edit
+  document.querySelectorAll('.edit-btn').forEach(btn => {
+    btn.onclick = () => showModal(true, {
+      id: btn.dataset.id,
+      name: btn.dataset.name,
+      price: btn.dataset.price,
+      description: btn.dataset.description,
+      category: btn.dataset.category,
+      thumbnail: btn.dataset.thumbnail,
+      is_featured: btn.dataset.featured === '1',
+    });
+  });
+}
+
+// === FILTER + DISPLAY ===
+function filterAndDisplayProducts() {
+  updateFilterButtonsAppearance();
+  const filtered = activeFilter === 'all'
+    ? allProductsData
+    : allProductsData.filter(p => Number(p.user_id) === Number(CURRENT_USER_ID));
+
+  if (!filtered || filtered.length === 0) {
+    displayPageSection({ showEmpty: true });
+  } else {
+    renderAllProducts(filtered);
+    displayPageSection({ showGrid: true });
+  }
+}
+
+// === FETCH PRODUCTS ===
+async function fetchProducts() {
+  try {
+    displayPageSection({ showLoading: true });
+    errorMessage.textContent = '';
+
+    const res = await fetch(PRODUCT_API_ENDPOINT, { headers: { 'Accept': 'application/json' } });
+    if (!res.ok) throw new Error('Failed to fetch');
+
+    allProductsData = await res.json();
+
+    if (!allProductsData || allProductsData.length === 0) {
+      displayPageSection({ showEmpty: true });
+      return;
+    }
+
+    filterAndDisplayProducts();
+
+  } catch (err) {
+    errorMessage.textContent = '⚠ Failed to load products. Please try again later.';
+    displayPageSection({ showError: true });
+    if (typeof showToast === 'function') showToast('❌ Failed to load products', 'error');
+  }
+}
+
+// === REFRESH ===
+async function refreshProductList() {
+  refreshBtn.disabled = true;
+  refreshBtn.innerText = '⏳ Refreshing...';
+  try {
+    await fetchProducts();
+    if (typeof showToast === 'function') showToast('✅ Product list updated!', 'success');
+  } finally {
+    refreshBtn.innerText = '🔄 Refresh Products';
+    refreshBtn.disabled = false;
+  }
+}
+
+// === INIT ===
+function initializeProductPage() {
+  showAllProductsButton.onclick = () => { activeFilter = 'all'; filterAndDisplayProducts(); };
+  showMyProductsButton.onclick = () => { activeFilter = 'my'; filterAndDisplayProducts(); };
+  refreshBtn.onclick = refreshProductList;
+  fetchProducts();
+}
+
+document.addEventListener('productsAdded', fetchProducts);
+initializeProductPage();
+</script>
 {% endblock content %}
